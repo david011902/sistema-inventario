@@ -1,0 +1,21 @@
+<div class="edit-container">
+  <header class="edit-header">
+    <button mat-icon-button [routerLink]="['/stock', stockId]">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h1>Editar Lote</h1>
+  </header>
+
+  <form [formGroup]="stockForm" (ngSubmit)="onSubmit()" class="edit-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Cantidad Actual</mat-label>
+      <input matInput type="number" formControlName="newActualQuantity" placeholder="0" />
+    </mat-form-field>
+
+    <div class="form-actions">
+      <button mat-flat-button color="primary" type="submit" [disabled]="stockForm.invalid">
+        GUARDAR CAMBIOS
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,48 @@
+<div class="create-container">
+  <header class="create-header">
+    <button mat-icon-button [routerLink]="['/inventario']">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h1>Registrar Lote</h1>
+  </header>
+
+  <form [formGroup]="stockForm" (ngSubmit)="onSubmit()" class="create-form">
+    <mat-form-field class="full-width">
+      <mat-label>Producto</mat-label>
+      <input
+        type="text"
+        placeholder="Escribe el nombre del producto"
+        matInput
+        formControlName="productId"
+        [matAutocomplete]="auto"
+      />
+
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+        @for (product of filteredProducts | async; track product.id) {
+          <mat-option [value]="product"> {{ product.name }} </mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Cantidad</mat-label>
+      <input matInput formControlName="initialAmount" placeholder="Ej. H4-1234" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Costo</mat-label>
+      <input matInput type="number" formControlName="purchaseCost" placeholder="0.00" />
+      <span matPrefix>$&nbsp;</span>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Proveedor</mat-label>
+      <input matInput type="string" formControlName="supplier" placeholder="Nombre del proveedor" />
+    </mat-form-field>
+    <div class="form-actions">
+      <button mat-flat-button color="primary" type="submit" [disabled]="stockForm.invalid">
+        GUARDAR
+      </button>
+    </div>
+  </form>
+</div>
