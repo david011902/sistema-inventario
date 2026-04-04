@@ -1,0 +1,38 @@
+<nav class="nav-buttom">
+  <a
+    routerLink=""
+    routerLinkActive="active-link"
+    [routerLinkActiveOptions]="{ exact: true }"
+    class="nav-button"
+  >
+    <mat-icon>dashboard</mat-icon>
+    <span class="label">Inicio</span>
+  </a>
+  <a
+    routerLink="/inventario"
+    routerLinkActive="active-link"
+    [routerLinkActiveOptions]="{ exact: true }"
+    class="nav-button"
+  >
+    <mat-icon>inventory</mat-icon>
+    <span class="label">Inventario</span>
+  </a>
+  <a
+    routerLink=""
+    routerLinkActive="active-link"
+    [routerLinkActiveOptions]="{ exact: true }"
+    class="nav-button"
+  >
+    <mat-icon>point_of_sale</mat-icon>
+    <span class="label">Venta</span>
+  </a>
+  <a
+    routerLink="/stock"
+    routerLinkActive="active-link"
+    [routerLinkActiveOptions]="{ exact: true }"
+    class="nav-button"
+  >
+    <mat-icon>add_business</mat-icon>
+    <span class="label">Stock</span>
+  </a>
+</nav>
