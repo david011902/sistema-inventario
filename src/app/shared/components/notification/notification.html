@@ -1,0 +1,14 @@
+<div class="success-dialog-wrapper">
+  <h2 mat-dialog-title class="success-title">
+    <mat-icon>check_circle</mat-icon>
+    {{ data.title }}
+  </h2>
+
+  <mat-dialog-content class="success-content">
+    {{ data.message }}
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-flat-button class="btn-success" [mat-dialog-close]="true">Aceptar</button>
+  </mat-dialog-actions>
+</div>

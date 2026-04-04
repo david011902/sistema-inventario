@@ -1,0 +1,16 @@
+<div class="soft-error-wrapper">
+  <h2 mat-dialog-title class="soft-error-title">
+    <mat-icon>report_problem</mat-icon>
+    {{ data.title || 'Atención' }}
+  </h2>
+
+  <mat-dialog-content class="soft-error-content">
+    <p>{{ data.message }}</p>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-flat-button color="primary" [mat-dialog-close]="true" class="btn-soft-error">
+      Entendido
+    </button>
+  </mat-dialog-actions>
+</div>

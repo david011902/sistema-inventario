@@ -1,0 +1,33 @@
+.success-dialog-wrapper {
+  padding: 8px; /* Espacio interno para que el contenido no pegue a los bordes */
+  min-width: 300px;
+}
+
+.success-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #2e7d32;
+  font-weight: 500;
+  margin-bottom: 16px !important;
+
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+  }
+}
+
+.success-content {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+.btn-success {
+  background-color: #2e7d32 !important;
+  color: white !important;
+  border-radius: 20px;
+  padding: 0 24px;
+}
