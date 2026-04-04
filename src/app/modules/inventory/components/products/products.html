@@ -1,0 +1,78 @@
+<router-outlet></router-outlet>
+<div class="filters-container">
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Buscar producto por nombre...</mat-label>
+    <mat-icon matPrefix>search</mat-icon>
+    <input
+      matInput
+      [(ngModel)]="currentSearchQuery"
+      (ngModelChange)="applyFilters()"
+      placeholder="Ej. Lámpara LED"
+    />
+  </mat-form-field>
+  <div class="category-wrapper">
+    <mat-chip-set class="category">
+      <mat-chip-option selected (selectionChange)="$event.selected && filterProducts('todos')">
+        Todos
+      </mat-chip-option>
+
+      <mat-chip-option (selectionChange)="$event.selected && filterProducts('bajo-stock')">
+        Bajo Stock
+      </mat-chip-option>
+
+      <mat-chip-option (selectionChange)="$event.selected && filterProducts('vehiculo')">
+        Vehículo
+      </mat-chip-option>
+
+      <mat-chip-option (selectionChange)="$event.selected && filterProducts('motocicleta')">
+        Motocicleta
+      </mat-chip-option>
+
+      <mat-chip-option (selectionChange)="$event.selected && filterProducts('bicicleta')">
+        Bicicleta
+      </mat-chip-option>
+    </mat-chip-set>
+  </div>
+</div>
+
+<div class="inventory-container">
+  @for (item of filteredProducts; track item.id) {
+    <mat-card
+      class="product-card"
+      [routerLink]="['/inventario/detalle', item.id]"
+      style="cursor: pointer"
+    >
+      <mat-card-header>
+        <mat-card-title>
+          {{ item.name }}
+        </mat-card-title>
+        <span class="stock-pill" [class.low]="item.stock < 10">{{
+          item.stock < 10 ? 'Existencia baja' : 'Disponible'
+        }}</span>
+      </mat-card-header>
+
+      <mat-card-content>
+        <p>SKU: {{ item.sku }}</p>
+        <p>{{ item.socketTypeName }}, {{ item.vehicleTypeName }}</p>
+        <mat-progress-bar
+          mode="determinate"
+          [value]="calcPorcentaje(item)"
+          [color]="item.stock < 10 ? 'warn' : 'primary'"
+        >
+        </mat-progress-bar>
+        <div class="card-footer">
+          <span>{{ item.stock }} / 100</span>
+          <span>{{ item.stock < 10 ? 'Solicitar mas producto' : 'Capacidad disponible' }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <button mat-fab color="primary" class="fab-button" (click)="goToCreate()">
+      <mat-icon>add</mat-icon>
+    </button>
+  } @empty {
+    <div class="empty-state">
+      <mat-icon>inventory</mat-icon>
+      <p>No hay productos registrados aún.</p>
+    </div>
+  }
+</div>
