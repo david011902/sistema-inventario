@@ -1,0 +1,35 @@
+<div class="detail-container">
+  @if (product) {
+    <header class="detail-header">
+      <button mat-icon-button routerLink="/inventario">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1>Detalles del Producto</h1>
+    </header>
+
+    <div class="info-card">
+      <h2>{{ product.name }}</h2>
+      <span class="sku-tag">SKU: {{ product.sku }}</span>
+
+      <div class="specs">
+        <div class="spec-item"><strong>Tipo:</strong> {{ product.socketTypeName }}</div>
+        <div class="spec-item"><strong>Vehículo:</strong> {{ product.vehicleTypeName }}</div>
+      </div>
+
+      <div class="stock-section">
+        <p>Nivel de Inventario actual</p>
+        <div class="stock-number">{{ product.stock }} / 100</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" (click)="goToEdit()">EDITAR</button>
+      <button mat-stroked-button color="warn" (click)="delete(product.id)">ELIMINAR</button>
+    </div>
+  } @else {
+    <div class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Cargando información del producto...</p>
+    </div>
+  }
+</div>
