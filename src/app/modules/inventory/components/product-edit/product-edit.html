@@ -1,0 +1,45 @@
+<div class="edit-container">
+  <header class="edit-header">
+    <button mat-icon-button [routerLink]="['/inventario/detalle', productId]">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h1>Editar Producto</h1>
+  </header>
+
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="edit-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre del Producto</mat-label>
+      <input matInput formControlName="name" placeholder="Ej. H4 LED" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Precio</mat-label>
+      <input matInput type="number" formControlName="price" placeholder="0.00" />
+      <span matPrefix>$&nbsp;</span>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo de Vehículo</mat-label>
+      <mat-select formControlName="vehicleTypeId">
+        @for (type of vehicleTypes; track type.id) {
+          <mat-option [value]="type.id">{{ type.nameVehicle }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo de Socket</mat-label>
+      <mat-select formControlName="socketTypeId">
+        @for (socket of socketTypes; track socket.id) {
+          <mat-option [value]="socket.id">{{ socket.nameSocket }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="form-actions">
+      <button mat-flat-button color="primary" type="submit" [disabled]="productForm.invalid">
+        GUARDAR CAMBIOS
+      </button>
+    </div>
+  </form>
+</div>
