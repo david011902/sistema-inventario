@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { StockServices } from '../../../../core/services/stock-services';
 import { ResponseStock } from '../../../../data/interfaces/stock/StockResponse';
 import { MatInputModule } from '@angular/material/input';
@@ -35,7 +35,7 @@ import { FormsModule } from '@angular/forms';
 export class StocksComponent implements OnInit {
   private router = inject(Router);
   private stockService = inject(StockServices);
-
+  private cdr = inject(ChangeDetectorRef);
   public stocks: ResponseStock[] = [];
   public searchTerm: string = '';
   public isLoading: boolean = false;
@@ -60,6 +60,7 @@ export class StocksComponent implements OnInit {
       next: (data) => {
         this.stocks = data;
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error:', err);

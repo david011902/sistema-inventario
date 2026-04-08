@@ -10,18 +10,18 @@ import { StockCreate } from '../../data/interfaces/stock/StockCreate';
 })
 export class StockServices {
   private http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrl}`;
+  private readonly baseUrl = `${environment.apiUrl}/stock`;
 
   getAllStock() {
-    return this.http.get<ResponseStock[]>(`${this.baseUrl}/stock`);
+    return this.http.get<ResponseStock[]>(`${this.baseUrl}`);
   }
   getStockById(id: string) {
-    return this.http.get<ResponseStock>(`${this.baseUrl}/stock/search/${id}`);
+    return this.http.get<ResponseStock>(`${this.baseUrl}/search/${id}`);
   }
   createStock(stock: StockCreate) {
-    return this.http.post<ResponseStock>(`${this.baseUrl}/stock`, stock);
+    return this.http.post<ResponseStock>(`${this.baseUrl}`, stock);
   }
   updateStock(id: string, stock: StockUpdate) {
-    return this.http.put<ResponseStock>(`${this.baseUrl}/stock/${id}`, stock);
+    return this.http.put<ResponseStock>(`${this.baseUrl}/${id}`, stock);
   }
 }

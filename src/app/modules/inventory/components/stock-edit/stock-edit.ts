@@ -50,7 +50,7 @@ export class StockEdit implements OnInit {
   loadStock() {
     this.stockService.getStockById(this.stockId).subscribe((data) => {
       this.stockForm.patchValue({
-        newActualQuantity: data.initialAmount,
+        newActualQuantity: data.currentAmount,
       });
     });
   }

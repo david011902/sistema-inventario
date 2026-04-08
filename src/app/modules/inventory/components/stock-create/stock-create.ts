@@ -12,7 +12,7 @@ import { StockServices } from '../../../../core/services/stock-services';
 import { ProductService } from '../../../../core/services/productService';
 import { ProductResponse } from '../../../../data/interfaces/products/ProductResponse';
 import { Observable, startWith, map } from 'rxjs';
-import { MatAutocomplete, MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-stock-create',
@@ -84,7 +84,7 @@ export class StockCreate {
       const stockData = this.stockForm.value;
       const dataToSend = {
         ...stockData,
-        productId: stockData.productId.id, // Suponiendo que el objeto tiene la propiedad .id
+        productId: stockData.productId.id,
       };
       this.stockService.createStock(dataToSend).subscribe({
         next: (res) => {
