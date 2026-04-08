@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { ProductService } from '../../../../core/services/productService';
 import { ProductResponse } from '../../../../data/interfaces/products/ProductResponse';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -33,7 +33,7 @@ export class ProductsComponent implements OnInit {
   //Inyectar el servicio
   private productService = inject(ProductService);
   private router = inject(Router);
-
+  private cdr = inject(ChangeDetectorRef);
   //variables
   public products: ProductResponse[] = [];
   public filteredProducts: ProductResponse[] = [];
@@ -55,6 +55,7 @@ export class ProductsComponent implements OnInit {
         this.products = data;
         this.filteredProducts = data;
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error:', err);
