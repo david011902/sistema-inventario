@@ -1,0 +1,36 @@
+<div class="search-container">
+  <div class="search-header">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar venta por folio...</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [(ngModel)]="searchTerm" placeholder="Ej. VENTA-01234" />
+    </mat-form-field>
+  </div>
+</div>
+
+<div class="stock-container">
+  @for (item of filteredAndSortedStocks; track item.id) {
+    <mat-card class="product-card" [routerLink]="['/sales', item.folio]" style="cursor: pointer">
+      <mat-card-header>
+        <mat-card-title>Folio: {{ item.folio }} </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="card-body">
+          <p><mat-icon>calendar_today</mat-icon> {{ item.date | date: 'mediumDate' }}</p>
+          <p class="total-text">{{ item.total | currency: 'MXN' }}</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  } @empty {
+    <div class="empty-state">
+      <mat-icon>inventory_2</mat-icon>
+      <p>
+        No se encontraron ventas con el folio: "<strong>{{ searchTerm }}</strong
+        >"
+      </p>
+    </div>
+  }
+</div>
+<button mat-fab color="primary" class="fab-button" (click)="goToCreate()">
+  <mat-icon>add</mat-icon>
+</button>
