@@ -1,0 +1,71 @@
+.sale-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; //Espacio entre los elementos
+  max-width: 900px;
+  margin: 0 auto; //Centrar el contenedor
+}
+.full-width {
+  width: 100%;
+}
+.item-container {
+  display: flex;
+  gap: 10px; //Espacio entre los campos
+  align-items: center; //Alinear verticalmente
+}
+.item-row {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) 100px 1fr 1fr auto; //Producto más ancho, luego cantidad y precio
+  align-items: center;
+  gap: 15px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fafafa;
+  margin-bottom: 8px;
+}
+.item-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.item-info strong {
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.item-info small {
+  color: gray;
+}
+.qty-field {
+  width: 100%;
+  max-width: 90px;
+}
+.price,
+.subtotal {
+  text-align: right;
+  font-weight: 500;
+}
+.item-row:hover {
+  background-color: #f1f1f1;
+}
+button[mat-icon-button] {
+  color: #e53935;
+  transition: transform 0.2s ease;
+}
+button[mat-icon-button]:hover {
+  transform: scale(1.2);
+}
+.actions {
+  display: flex;
+  justify-content: center;
+}
+
+.total-container {
+  display: flex;
+  justify-content: center;
+  text-align: right;
+  font-size: 18px;
+  font-weight: bold;
+}
