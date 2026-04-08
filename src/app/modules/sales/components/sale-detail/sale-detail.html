@@ -1,0 +1,66 @@
+<div class="detail-container">
+  @if (sale) {
+    <header class="detail-header">
+      <button mat-icon-button routerLink="/sales">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1>Detalles de la venta</h1>
+    </header>
+    <!-- Titulo venta -->
+    <div class="info-card">
+      <div class="header-row">
+        <h2>Folio: {{ sale.folio }}</h2>
+        <span class="status-chip" [ngClass]="sale.status.toLowerCase()">
+          <b>Estado: </b>{{ sale.status }}
+        </span>
+      </div>
+
+      <div class="meta-info">
+        <span class="date-tag">
+          <mat-icon>calendar_today</mat-icon>
+          {{ sale.date | date: 'mediumDate' }}
+        </span>
+      </div>
+      <!-- Detalles de la venta -->
+      <div class="details-section">
+        <h3>Productos vendidos</h3>
+        <div class="details-header">
+          <span>Producto / SKU</span>
+          <span class="text-center">Cant.</span>
+          <span class="text-right">Precio</span>
+          <span class="text-right">Subtotal</span>
+        </div>
+
+        <div class="details-list">
+          @for (item of sale.details; track item.id) {
+            <div class="detail-item">
+              <div class="product-info">
+                <span class="product-name">{{ item.productName }}</span>
+                <span class="product-sku">{{ item.productSku }}</span>
+              </div>
+              <div class="quantity text-center">x{{ item.quantity }}</div>
+              <div class="price text-right">{{ item.priceAtSale | currency: 'MXN' }}</div>
+              <div class="subtotal text-right">
+                <strong>{{ item.subtotal | currency: 'MXN' }}</strong>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="total-row">
+          <span>TOTAL </span>
+          <span class="grand-total">{{ sale.total | currency: 'MXN' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" (click)="goToEdit()">Devolución</button>
+    </div>
+  } @else {
+    <div class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Cargando información del producto...</p>
+    </div>
+  }
+</div>
