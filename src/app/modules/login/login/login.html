@@ -1,0 +1,39 @@
+<div class="login-card">
+  <h2>Iniciar Sesión</h2>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Correo Electrónico</mat-label>
+      <input matInput formControlName="email" type="email" placeholder="usuario@ejemplo.com" />
+      @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+        <mat-error>Introduce un correo válido</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Contraseña</mat-label>
+      <input matInput formControlName="password" type="password" placeholder="********" />
+      @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+        <mat-error>Mínimo 8 caracteres</mat-error>
+      }
+    </mat-form-field>
+
+    @if (errorMessage()) {
+      <div class="error-box">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="loginForm.invalid || loading()"
+    >
+      @if (loading()) {
+        <mat-spinner diameter="20" style="display: inline-block; margin-right: 8px"></mat-spinner>
+      }
+      {{ loading() ? 'Procesando...' : 'Entrar' }}
+    </button>
+  </form>
+</div>
