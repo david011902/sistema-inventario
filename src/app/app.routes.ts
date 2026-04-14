@@ -18,11 +18,11 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./modules/dashboard/inicio/inicio').then((m) => m.DashboardComponent),
   },
-  { path: '', redirectTo: 'inventario', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
 
-  { path: 'inventario', component: ProductsComponent },
-  { path: 'inventario/crear', component: ProductCreate },
-  { path: 'inventario/detalle/:id', component: ProductDetail },
+  { path: 'inventario', component: ProductsComponent, canActivate: [authGuard] },
+  { path: 'inventario/crear', component: ProductCreate, canActivate: [authGuard] },
+  { path: 'inventario/detalle/:id', component: ProductDetail, canActivate: [authGuard] },
   {
     path: 'inventario/editar/:id',
     loadComponent: () =>
@@ -30,14 +30,14 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
 
-  { path: 'stock', component: StocksComponent },
+  { path: 'stock', component: StocksComponent, canActivate: [authGuard] },
   {
     path: 'stock/crear',
     loadComponent: () =>
       import('./modules/inventory/components/stock-create/stock-create').then((m) => m.StockCreate),
     canActivate: [authGuard],
   },
-  { path: 'stock/:id', component: StockDetail },
+  { path: 'stock/:id', component: StockDetail, canActivate: [authGuard] },
 
   {
     path: 'stock/editar/:id',
