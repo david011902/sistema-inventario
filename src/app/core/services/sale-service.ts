@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { SaleResponse } from '../../data/interfaces/sales/SaleResponse';
 import { SaleUpdate } from '../../data/interfaces/sales/SaleUpdate';
 import { SaleCreate } from '../../data/interfaces/sales/SaleCreate';

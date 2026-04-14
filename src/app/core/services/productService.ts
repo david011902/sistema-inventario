@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { ProductResponse } from '../../data/interfaces/products/ProductResponse';
 import { ProductUpdate } from '../../data/interfaces/products/ProductUpdate';
 import { ProductCreate } from '../../modules/inventory/components/product-create/product-create';

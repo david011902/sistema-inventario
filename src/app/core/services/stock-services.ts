@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { ResponseStock } from '../../data/interfaces/stock/StockResponse';
 import { StockUpdate } from '../../data/interfaces/stock/stockUpdate';
 import { StockCreate } from '../../data/interfaces/stock/StockCreate';
