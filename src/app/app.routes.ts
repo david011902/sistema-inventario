@@ -1,3 +1,4 @@
+import { DashboardComponent } from './modules/dashboard/inicio/inicio';
 import { SaleCreate } from './data/interfaces/sales/SaleCreate';
 import { Routes } from '@angular/router';
 import { ProductsComponent } from './modules/inventory/components/products/products';
@@ -11,6 +12,11 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () => import('./modules/login/login/login').then((m) => m.LoginComponent),
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./modules/dashboard/inicio/inicio').then((m) => m.DashboardComponent),
   },
   { path: '', redirectTo: 'inventario', pathMatch: 'full' },
 
