@@ -5,6 +5,19 @@
   max-width: 900px;
   margin: 0 auto; //Centrar el contenedor
 }
+.create-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #2c3e50;
+  }
+}
+
 .full-width {
   width: 100%;
 }

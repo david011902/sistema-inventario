@@ -1,51 +1,59 @@
-<form [formGroup]="saleForm" class="sale-container">
-  <!-- Barra de busqueda de autocomplete -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Buscar Producto</mat-label>
-    <input type="text" matInput [formControl]="productControl" [matAutocomplete]="auto" />
-    <mat-autocomplete
-      #auto="matAutocomplete"
-      [displayWith]="displayFn"
-      (optionSelected)="onProductSelected($event)"
-    >
-      @for (product of filteredProducts | async; track product.id) {
-        <mat-option [value]="product">
-          {{ product.name }},
-          {{ product.sku }}
-        </mat-option>
+<div>
+  <header class="create-header">
+    <button mat-icon-button [routerLink]="['/sales']">
+      <mat-icon>close</mat-icon>
+    </button>
+    <h1>Generar Venta</h1>
+  </header>
+  <form [formGroup]="saleForm" class="sale-container">
+    <!-- Barra de busqueda de autocomplete -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Buscar Producto</mat-label>
+      <input type="text" matInput [formControl]="productControl" [matAutocomplete]="auto" />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        [displayWith]="displayFn"
+        (optionSelected)="onProductSelected($event)"
+      >
+        @for (product of filteredProducts | async; track product.id) {
+          <mat-option [value]="product">
+            {{ product.name }},
+            {{ product.sku }}
+          </mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <!-- Lista de productos agregados -->
+    <div formArrayName="items" class="items-container">
+      @for (item of items.controls; track $index; let i = $index) {
+        <div [formGroupName]="i" class="item-row">
+          <!-- Nombre y su SKU-->
+          <div class="item-info">
+            <strong>{{ item.value.productName }}</strong>
+            <small>({{ item.value.sku }})</small>
+          </div>
+
+          <!-- Cantidad y Precio -->
+          <mat-form-field appearance="outline" class="qty-field">
+            <mat-label>Cantidad</mat-label>
+            <input matInput type="number" formControlName="quantity" min="1" />
+          </mat-form-field>
+          <!-- Precio -->
+          <div class="price">{{ item.value.price | currency: 'MXN' : 'symbol' }}</div>
+          <!-- Subtotal -->
+          <div class="subtotal">
+            {{ item.value.quantity * item.value.price | currency: 'MXN' : 'symbol' }}
+          </div>
+          <!-- Boton eliminar -->
+          <button mat-icon-button color="warn" (click)="removeProduct(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
       }
-    </mat-autocomplete>
-  </mat-form-field>
-
-  <!-- Lista de productos agregados -->
-  <div formArrayName="items" class="items-container">
-    @for (item of items.controls; track $index; let i = $index) {
-      <div [formGroupName]="i" class="item-row">
-        <!-- Nombre y su SKU-->
-        <div class="item-info">
-          <strong>{{ item.value.productName }}</strong>
-          <small>({{ item.value.sku }})</small>
-        </div>
-
-        <!-- Cantidad y Precio -->
-        <mat-form-field appearance="outline" class="qty-field">
-          <mat-label>Cantidad</mat-label>
-          <input matInput type="number" formControlName="quantity" min="1" />
-        </mat-form-field>
-        <!-- Precio -->
-        <div class="price">{{ item.value.price | currency: 'MXN' : 'symbol' }}</div>
-        <!-- Subtotal -->
-        <div class="subtotal">
-          {{ item.value.quantity * item.value.price | currency: 'MXN' : 'symbol' }}
-        </div>
-        <!-- Boton eliminar -->
-        <button mat-icon-button color="warn" (click)="removeProduct(i)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
-    }
-  </div>
-</form>
+    </div>
+  </form>
+</div>
 <div class="total-container">
   <h2>Total: {{ getTotal() | currency: 'MXN' }}</h2>
 </div>

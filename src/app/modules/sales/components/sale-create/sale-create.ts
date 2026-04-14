@@ -38,7 +38,7 @@ import {
     MatSelectModule,
     MatOptionModule,
     MatAutocompleteModule,
-    // RouterLink,
+    RouterLink,
   ],
   templateUrl: './sale-create.html',
   styleUrl: './sale-create.scss',
