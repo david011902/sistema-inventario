@@ -50,12 +50,13 @@ export class LoginComponent {
     this.authService.login(this.loginForm.value).subscribe({
       next: (response) => {
         console.log('Login successful:', response);
-        // Handle successful login, e.g., navigate to dashboard
-        this.router.navigate(['/inventario']);
+        this.router.navigate(['/dashboard']);
       },
       error: (error) => {
+        this.loading.set(false);
         console.error('Login failed:', error);
-        // Handle login error, e.g., show error message
+        const message = error.error || 'Ocurrio un error al hacer login';
+        this.errorMessage.set(message);
       },
     });
   }
