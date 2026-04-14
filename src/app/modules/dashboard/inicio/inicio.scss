@@ -1,0 +1,22 @@
+.dashboard-container {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+}
+
+.big-number {
+  font-size: 2.5rem;
+  font-weight: 500;
+  margin: 10px 0;
+}
+
+.table-card {
+  padding: 16px;
+}
