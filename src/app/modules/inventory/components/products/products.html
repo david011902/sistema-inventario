@@ -66,13 +66,13 @@
         </div>
       </mat-card-content>
     </mat-card>
-    <button mat-fab color="primary" class="fab-button" (click)="goToCreate()">
-      <mat-icon>add</mat-icon>
-    </button>
   } @empty {
     <div class="empty-state">
       <mat-icon>inventory</mat-icon>
       <p>No hay productos registrados aún.</p>
     </div>
   }
+  <button mat-fab color="primary" class="fab-button" (click)="goToCreate()">
+    <mat-icon>add</mat-icon>
+  </button>
 </div>
