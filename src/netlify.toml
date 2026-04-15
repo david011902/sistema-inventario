@@ -1,6 +1,6 @@
 [build]
   command = "ng build --configuration production"
-  publish = "dist/sistema-inventario/browser"
+  publish = "dist/sistema-inventario"
 
 [[redirects]]
   from = "/*"
