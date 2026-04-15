@@ -92,7 +92,7 @@ export class SaleReturn implements OnInit {
     this.isLodading = true;
     this.saleService.updateSale(this.saleFolio, dataUpdate).subscribe({
       next: () => {
-        console.log('Devolución procesada correctamente', refund);
+        // console.log('Devolución procesada correctamente', refund);
         this.saleForm.reset();
         this.getSale();
         this.router.navigate(['/sales']);

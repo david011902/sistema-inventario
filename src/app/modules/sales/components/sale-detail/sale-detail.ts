@@ -39,8 +39,8 @@ export class SaleDetailComponent {
   loadSale(folio: string): void {
     this.saleService.getSaleByFolio(folio).subscribe({
       next: (data) => {
-        console.log('--- DATA RECIBIDA ---');
-        console.log(data);
+        // console.log('--- DATA RECIBIDA ---');
+        // console.log(data);
         this.sale = data;
         this.cdr.detectChanges();
       },

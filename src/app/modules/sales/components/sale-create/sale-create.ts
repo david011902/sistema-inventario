@@ -144,7 +144,7 @@ export class SaleCreateComponent implements OnInit {
       })),
     };
     this.saleService.createSale(sale).subscribe(() => {
-      console.log('Venta creada');
+      // console.log('Venta creada');
       this.saleForm.reset();
       this.items.clear();
       this.productControl.setValue('');

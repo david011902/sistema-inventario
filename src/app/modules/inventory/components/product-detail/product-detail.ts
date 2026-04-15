@@ -41,8 +41,8 @@ export class ProductDetail implements OnInit {
   loadProduct(id: string): void {
     this.productService.getProductById(id).subscribe({
       next: (data) => {
-        console.log('--- DATA RECIBIDA ---');
-        console.log(data);
+        // console.log('--- DATA RECIBIDA ---');
+        // console.log(data);
         this.product = data;
         this.cdr.detectChanges();
       },

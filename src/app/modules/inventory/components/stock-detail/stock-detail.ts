@@ -39,8 +39,8 @@ export class StockDetail {
   loadStock(id: string): void {
     this.stockService.getStockById(id).subscribe({
       next: (data) => {
-        console.log('--- DATA RECIBIDA ---');
-        console.log(data);
+        // console.log('--- DATA RECIBIDA ---');
+        // console.log(data);
         this.stock = data;
         this.cdr.detectChanges();
       },
