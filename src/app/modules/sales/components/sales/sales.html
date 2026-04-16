@@ -12,7 +12,7 @@
   @for (item of filteredAndSortedStocks; track item.id) {
     <mat-card class="product-card" [routerLink]="['/sales', item.folio]" style="cursor: pointer">
       <mat-card-header>
-        <mat-card-title>Folio: {{ item.folio }} </mat-card-title>
+        <mat-card-title>Folio: {{ item.folio }}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div class="card-body">
@@ -30,7 +30,8 @@
       </p>
     </div>
   }
+
+  <button mat-fab color="primary" class="fab-button" (click)="goToCreate()">
+    <mat-icon>add</mat-icon>
+  </button>
 </div>
-<button mat-fab color="primary" class="fab-button" (click)="goToCreate()">
-  <mat-icon>add</mat-icon>
-</button>

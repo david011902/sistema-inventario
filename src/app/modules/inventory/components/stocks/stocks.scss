@@ -1,10 +1,17 @@
 .search-container {
-  padding: 16px 16px 8px 16px;
-  background-color: #fff;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03); // Sutil sombra al hacer scroll
+  background-color: white; // full-width
+  box-shadow: none; // Sutil sombra al hacer scroll
+}
+.search-header {
+  max-width: 768px;
+  margin: 0 auto;
+  padding: 16px 16px 8px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .search-field {
@@ -84,8 +91,11 @@
   gap: 8px;
 }
 .stock-container {
+  max-width: 768px;
+  margin: 0 auto;
   padding: 16px;
-  background-color: rgba(211, 201, 201, 0.377);
+  background-color: transparent;
+  padding-bottom: 120px;
   min-height: calc(100vh - 60px);
 }
 

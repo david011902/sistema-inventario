@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px; //Espacio entre los elementos
-  max-width: 900px;
+  max-width: 768px;
   margin: 0 auto; //Centrar el contenedor
 }
 .create-header {
@@ -17,7 +17,29 @@
     color: #2c3e50;
   }
 }
+.option-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
 
+.product-name {
+  font-weight: 500;
+  margin-right: 8px;
+}
+
+.product-sku {
+  color: #757575;
+  font-size: 0.85rem;
+  flex-grow: 1;
+}
+
+.product-price {
+  font-weight: 700;
+  color: #2e7d32;
+  margin-left: 16px;
+}
 .full-width {
   width: 100%;
 }
