@@ -40,3 +40,10 @@ button[type='submit'] {
   font-weight: 500;
   margin-top: 16px;
 }
+button[mat-icon-button] {
+  width: 48px;
+  height: 48px;
+  position: relative;
+  z-index: 2;
+  touch-action: manipulation;
+}

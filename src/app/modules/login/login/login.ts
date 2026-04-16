@@ -33,6 +33,7 @@ export class LoginComponent {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private authService = inject(AuthService);
+  hide = true;
   loading = signal(false);
   errorMessage = signal<string | null>(null);
   loginForm: FormGroup = this.fb.group({
@@ -59,5 +60,8 @@ export class LoginComponent {
         this.errorMessage.set(message);
       },
     });
+  }
+  togglePasswordVisibility() {
+    this.hide = !this.hide;
   }
 }
