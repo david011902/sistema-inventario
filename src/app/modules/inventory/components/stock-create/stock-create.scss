@@ -32,7 +32,22 @@
       width: 100%;
     }
   }
+  .product-name {
+    font-weight: 500;
+    margin-right: 8px;
+  }
 
+  .product-sku {
+    color: #757575;
+    font-size: 0.85rem;
+    flex-grow: 1;
+  }
+
+  .product-price {
+    font-weight: 700;
+    color: #2e7d32;
+    margin-left: 16px;
+  }
   .form-actions {
     margin-top: 32px;
 

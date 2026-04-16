@@ -19,7 +19,15 @@
 
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
         @for (product of filteredProducts | async; track product.id) {
-          <mat-option [value]="product"> {{ product.name }} </mat-option>
+          <mat-option [value]="product">
+            <div class="option-container">
+              <span class="product-name">{{ product.name }}</span>
+              <span class="product-sku">({{ product.sku }})</span>
+              <span class="product-price">{{
+                product.price | currency: 'USD' : 'symbol' : '1.2-2'
+              }}</span>
+            </div>
+          </mat-option>
         }
       </mat-autocomplete>
     </mat-form-field>
