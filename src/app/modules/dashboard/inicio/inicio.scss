@@ -2,7 +2,10 @@
   padding: 24px;
   display: flex;
   flex-direction: column;
+  align-content: center;
   gap: 24px;
+  max-width: 768px;
+  margin: 0 auto;
 }
 
 .kpi-grid {
