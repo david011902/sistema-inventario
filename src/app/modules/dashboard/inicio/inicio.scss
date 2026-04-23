@@ -20,3 +20,9 @@
 .table-card {
   padding: 16px;
 }
+.clickable-row {
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(86, 153, 241, 0.04);
+  }
+}
