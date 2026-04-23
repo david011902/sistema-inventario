@@ -16,14 +16,13 @@
         (optionSelected)="onProductSelected($event)"
       >
         @for (product of filteredProducts | async; track product.id) {
-          <mat-option [value]="product" [disabled]="product.stock <= 0">
+          <mat-option [value]="product">
             <div class="option-container">
               <span class="product-name">{{ product.name }}</span>
               <span class="product-sku">({{ product.sku }})</span>
-              <span class="product-stock" [class.no-stock]="product.stock <= 0">
-                Stock: {{ product.stock }}
-              </span>
-              <span class="product-price">{{ product.price | currency: 'MXN' }}</span>
+              <span class="product-price">{{
+                product.price | currency: 'USD' : 'symbol' : '1.2-2'
+              }}</span>
             </div>
           </mat-option>
         }
@@ -35,33 +34,30 @@
         <div [formGroupName]="i" class="item-row">
           <div class="item-info">
             <strong>{{ item.value.productName }}</strong>
-            <small>SKU: {{ item.value.sku }}</small>
-            <span class="stock-badge">Disponible: {{ item.value.stock }}</span>
+            <small>({{ item.value.sku }})</small>
           </div>
-
           <mat-form-field appearance="outline" class="qty-field">
             <mat-label>Cantidad</mat-label>
-            <input matInput type="number" formControlName="quantity" />
-
+            <input
+              matInput
+              type="number"
+              formControlName="quantity"
+              min="1"
+              [max]="item.get('stock')?.value"
+            />
+            <!-- Mensaje de error cuando supera el stock -->
             @if (item.get('quantity')?.hasError('max')) {
-              <mat-error>Máximo: {{ item.get('stock')?.value }}</mat-error>
+              <mat-error> Máximo {{ item.get('stock')?.value }} unidades disponibles </mat-error>
             }
-            @if (item.get('quantity')?.hasError('required')) {
-              <mat-error>Requerido</mat-error>
+            @if (item.get('quantity')?.hasError('min')) {
+              <mat-error>La cantidad mínima es 1</mat-error>
             }
           </mat-form-field>
-
-          <div class="price">
-            <small>Precio unit.</small><br />
-            {{ item.value.price | currency: 'MXN' }}
-          </div>
-
+          <div class="price">{{ item.value.price | currency: 'MXN' : 'symbol' }}</div>
           <div class="subtotal">
-            <small>Subtotal</small><br />
-            {{ item.get('quantity')?.value * item.value.price | currency: 'MXN' }}
+            {{ item.value.quantity * item.value.price | currency: 'MXN' : 'symbol' }}
           </div>
-
-          <button mat-icon-button color="warn" (click)="removeProduct(i)" matTooltip="Quitar">
+          <button mat-icon-button color="warn" (click)="removeProduct(i)">
             <mat-icon>delete</mat-icon>
           </button>
         </div>
@@ -69,22 +65,18 @@
     </div>
   </form>
 
-  <div class="footer-container">
-    <div class="total-container">
-      <h2>Total: {{ getTotal() | currency: 'MXN' }}</h2>
-    </div>
+  <div class="total-container">
+    <h2>Total: {{ getTotal() | currency: 'MXN' }}</h2>
+  </div>
 
-    <div class="actions">
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        (click)="onSubmit()"
-        [disabled]="items.length === 0 || saleForm.invalid"
-      >
-        <mat-icon>check</mat-icon>
-        Registrar Venta
-      </button>
-    </div>
+  <div class="actions">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="items.length === 0 || saleForm.invalid"
+    >
+      Registrar Venta
+    </button>
   </div>
 </div>

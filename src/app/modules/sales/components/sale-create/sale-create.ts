@@ -62,7 +62,7 @@ export class SaleCreateComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    this.loadProducts();
   }
 
   //Getter del FormArray
@@ -103,18 +103,19 @@ export class SaleCreateComponent implements OnInit {
 
   //Agregar producto a la venta
   addProduct(product: any) {
-    const exists = this.items.value.find((item: any) => item.productId === product.id);
-    if (exists !== -1) {
-      const item = this.items.at(exists);
+    const existsIndex = this.items.value.findIndex((item: any) => item.productId === product.id);
+
+    if (existsIndex !== -1) {
+      const item = this.items.at(existsIndex);
       const currentQty = item.get('quantity')?.value;
-      const stockAvailable = product.stock; // O la propiedad que traiga el stock
+      const stockAvailable = product.stock;
 
       if (currentQty < stockAvailable) {
         item.get('quantity')?.setValue(currentQty + 1);
       } else {
         this.dialogService.alert({
           title: 'Stock máximo',
-          message: `No puedes agregar más de ${stockAvailable} unidades de este producto.`,
+          message: `No puedes agregar más de ${stockAvailable} unidades.`,
         });
       }
       return;
@@ -124,8 +125,9 @@ export class SaleCreateComponent implements OnInit {
         productId: [product.id, Validators.required],
         productName: [product.name],
         sku: [product.sku, Validators.required],
-        quantity: [1, [Validators.required, Validators.min(1)]],
+        quantity: [1, [Validators.required, Validators.min(1), Validators.max(product.stock)]],
         price: [product.price, [Validators.required, Validators.min(0.01)]],
+        stock: [product.stock],
       }),
     );
   }
