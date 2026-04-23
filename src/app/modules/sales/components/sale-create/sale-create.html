@@ -20,6 +20,7 @@
             <div class="option-container">
               <span class="product-name">{{ product.name }}</span>
               <span class="product-sku">({{ product.sku }})</span>
+              <span class="product-sku">(Disponible: {{ product.stock }})</span>
               <span class="product-price">{{
                 product.price | currency: 'USD' : 'symbol' : '1.2-2'
               }}</span>
