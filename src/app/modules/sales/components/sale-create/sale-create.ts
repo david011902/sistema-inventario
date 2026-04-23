@@ -61,6 +61,9 @@ export class SaleCreateComponent implements OnInit {
       items: this.fb.array([]),
     });
   }
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
 
   //Getter del FormArray
   get items(): FormArray {
@@ -101,11 +104,19 @@ export class SaleCreateComponent implements OnInit {
   //Agregar producto a la venta
   addProduct(product: any) {
     const exists = this.items.value.find((item: any) => item.productId === product.id);
-    if (exists) {
-      const index = this.items.value.findIndex((item: any) => item.productId === product.id);
-      const item = this.items.at(index);
-      const qty = item.get('quantity')?.value;
-      item.get('quantity')?.setValue(qty + 1);
+    if (exists !== -1) {
+      const item = this.items.at(exists);
+      const currentQty = item.get('quantity')?.value;
+      const stockAvailable = product.stock; // O la propiedad que traiga el stock
+
+      if (currentQty < stockAvailable) {
+        item.get('quantity')?.setValue(currentQty + 1);
+      } else {
+        this.dialogService.alert({
+          title: 'Stock máximo',
+          message: `No puedes agregar más de ${stockAvailable} unidades de este producto.`,
+        });
+      }
       return;
     }
     this.items.push(
@@ -134,25 +145,38 @@ export class SaleCreateComponent implements OnInit {
   }
   //Enviar venta
   onSubmit() {
-    if (this.items.length === 0) {
-      return;
-    }
+    if (this.items.length === 0) return;
+
     const sale = {
       items: this.items.value.map((item: any) => ({
         sku: item.sku,
         quantity: item.quantity,
       })),
     };
-    this.saleService.createSale(sale).subscribe(() => {
-      // console.log('Venta creada');
-      this.saleForm.reset();
-      this.items.clear();
-      this.productControl.setValue('');
-      this.router.navigate(['/sales']);
-    });
-  }
 
-  ngOnInit(): void {
-    this.loadProducts();
+    this.saleService.createSale(sale).subscribe({
+      next: (res) => {
+        // 1. Mostrar mensaje de éxito con el Folio generado por el backend
+        this.dialogService.success({
+          title: 'Venta realizada',
+          message: `La venta con folio ${res.folio} se ha registrado correctamente por un total de $${res.total}.`,
+        });
+
+        // 2. Limpiar el formulario
+        this.saleForm.reset();
+        this.items.clear();
+        this.productControl.setValue('');
+
+        // 3. Redirigir al detalle de la venta recién creada o a la lista
+        this.router.navigate(['/sales/detail', res.id]);
+      },
+      error: (err) => {
+        // Es vital manejar el error (ej. si el backend lanza la excepción de stock)
+        this.dialogService.alert({
+          title: 'Error en la venta',
+          message: err.error?.message || 'No se pudo completar la venta. Verifique el stock.',
+        });
+      },
+    });
   }
 }

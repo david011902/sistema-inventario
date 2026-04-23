@@ -16,13 +16,14 @@
         (optionSelected)="onProductSelected($event)"
       >
         @for (product of filteredProducts | async; track product.id) {
-          <mat-option [value]="product">
+          <mat-option [value]="product" [disabled]="product.stock <= 0">
             <div class="option-container">
               <span class="product-name">{{ product.name }}</span>
               <span class="product-sku">({{ product.sku }})</span>
-              <span class="product-price">{{
-                product.price | currency: 'USD' : 'symbol' : '1.2-2'
-              }}</span>
+              <span class="product-stock" [class.no-stock]="product.stock <= 0">
+                Stock: {{ product.stock }}
+              </span>
+              <span class="product-price">{{ product.price | currency: 'MXN' }}</span>
             </div>
           </mat-option>
         }
@@ -34,17 +35,33 @@
         <div [formGroupName]="i" class="item-row">
           <div class="item-info">
             <strong>{{ item.value.productName }}</strong>
-            <small>({{ item.value.sku }})</small>
+            <small>SKU: {{ item.value.sku }}</small>
+            <span class="stock-badge">Disponible: {{ item.value.stock }}</span>
           </div>
+
           <mat-form-field appearance="outline" class="qty-field">
             <mat-label>Cantidad</mat-label>
-            <input matInput type="number" formControlName="quantity" min="1" />
+            <input matInput type="number" formControlName="quantity" />
+
+            @if (item.get('quantity')?.hasError('max')) {
+              <mat-error>Máximo: {{ item.get('stock')?.value }}</mat-error>
+            }
+            @if (item.get('quantity')?.hasError('required')) {
+              <mat-error>Requerido</mat-error>
+            }
           </mat-form-field>
-          <div class="price">{{ item.value.price | currency: 'MXN' : 'symbol' }}</div>
-          <div class="subtotal">
-            {{ item.value.quantity * item.value.price | currency: 'MXN' : 'symbol' }}
+
+          <div class="price">
+            <small>Precio unit.</small><br />
+            {{ item.value.price | currency: 'MXN' }}
           </div>
-          <button mat-icon-button color="warn" (click)="removeProduct(i)">
+
+          <div class="subtotal">
+            <small>Subtotal</small><br />
+            {{ item.get('quantity')?.value * item.value.price | currency: 'MXN' }}
+          </div>
+
+          <button mat-icon-button color="warn" (click)="removeProduct(i)" matTooltip="Quitar">
             <mat-icon>delete</mat-icon>
           </button>
         </div>
@@ -52,19 +69,22 @@
     </div>
   </form>
 
-  <div class="total-container">
-    <h2>Total: {{ getTotal() | currency: 'MXN' }}</h2>
-  </div>
+  <div class="footer-container">
+    <div class="total-container">
+      <h2>Total: {{ getTotal() | currency: 'MXN' }}</h2>
+    </div>
 
-  <div class="actions">
-    <button
-      mat-raised-button
-      color="primary"
-      type="submit"
-      (click)="onSubmit()"
-      [disabled]="items.length === 0"
-    >
-      Registrar Venta
-    </button>
+    <div class="actions">
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        (click)="onSubmit()"
+        [disabled]="items.length === 0 || saleForm.invalid"
+      >
+        <mat-icon>check</mat-icon>
+        Registrar Venta
+      </button>
+    </div>
   </div>
 </div>
