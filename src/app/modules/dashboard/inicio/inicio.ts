@@ -43,6 +43,16 @@ export class DashboardComponent implements OnInit {
     });
   }
   get totalRevenue() {
-    return this.sales.reduce((acc, sale) => acc + sale.total, 0);
+    const today = new Date();
+    return this.sales
+      .filter((sale) => {
+        const saleDate = new Date(sale.date);
+        return (
+          saleDate.getDate() === today.getDate() &&
+          saleDate.getMonth() === today.getMonth() &&
+          saleDate.getFullYear() === today.getFullYear()
+        );
+      })
+      .reduce((acc, sale) => acc + sale.total, 0);
   }
 }
