@@ -83,19 +83,22 @@ export class SaleCreateComponent implements OnInit {
       startWith(''),
       map((value) => {
         const search = typeof value === 'string' ? value : value?.name;
-        return search ? this.filterProducts(search) : this.products.slice();
+        const available = this.products.filter((p) => p.stock > 0);
+        return search ? this.filterProducts(search) : available;
       }),
     );
   }
-  //Metodo para el filtado de nombre o sku
+
   filterProducts(value: string) {
     const filterValue = value.toLowerCase();
     return this.products.filter(
       (product) =>
-        product.name.toLowerCase().includes(filterValue) ||
-        product.sku.toLowerCase().includes(filterValue),
+        product.stock > 0 &&
+        (product.name.toLowerCase().includes(filterValue) ||
+          product.sku.toLowerCase().includes(filterValue)),
     );
   }
+
   //mostrar texto del autocomplete
   displayFn(product: ProductResponse): string {
     return product && product.name ? product.name : '';
