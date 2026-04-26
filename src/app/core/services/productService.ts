@@ -22,6 +22,9 @@ export class ProductService {
   getProductByNombre(nombre: string) {
     return this.http.get<ProductResponse[]>(`${this.baseUrl}/search${nombre}`);
   }
+  getProductBySku(sku: string) {
+    return this.http.get<ProductResponse>(`${this.baseUrl}/code{sku}`);
+  }
 
   updateProduct(id: string, product: ProductUpdate) {
     return this.http.put<ProductResponse>(`${this.baseUrl}/${id}`, product);

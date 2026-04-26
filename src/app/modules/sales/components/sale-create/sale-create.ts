@@ -53,6 +53,7 @@ export class SaleCreateComponent implements OnInit {
   saleForm: FormGroup;
   products: ProductResponse[] = [];
   filteredProducts!: Observable<ProductResponse[]>;
+  skuControl = new FormControl('');
   productControl = new FormControl();
 
   //Inicializar el Form en el constructor
@@ -64,7 +65,33 @@ export class SaleCreateComponent implements OnInit {
   ngOnInit(): void {
     this.loadProducts();
   }
+  onSkuSearch(event: KeyboardEvent) {
+    if (event.key !== 'Enter') return;
 
+    const sku = this.skuControl.value?.trim();
+    if (!sku) return;
+
+    const localProduct = this.products.find((p) => p.sku.toLowerCase() === sku.toLowerCase());
+
+    if (localProduct) {
+      this.addProduct(localProduct);
+      this.skuControl.setValue('', { emitEvent: false });
+      return;
+    }
+
+    this.productService.getProductBySku(sku).subscribe({
+      next: (product) => {
+        this.addProduct(product);
+        this.skuControl.setValue('', { emitEvent: false });
+      },
+      error: () => {
+        this.dialogService.alert({
+          title: 'Producto no encontrado',
+          message: `No existe ningún producto con el SKU "${sku}".`,
+        });
+      },
+    });
+  }
   //Getter del FormArray
   get items(): FormArray {
     return this.saleForm.get('items') as FormArray;
@@ -138,7 +165,7 @@ export class SaleCreateComponent implements OnInit {
   onProductSelected(event: MatAutocompleteSelectedEvent) {
     const product = event.option.value;
     this.addProduct(product);
-    this.productControl.setValue('');
+    this.productControl.setValue('', { emitEvent: false });
   }
   //Eliminar producto de la venta
   removeProduct(index: number) {

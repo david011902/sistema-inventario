@@ -104,3 +104,13 @@ button[mat-icon-button]:hover {
   font-size: 18px;
   font-weight: bold;
 }
+.sku-search-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+
+  .sku-field {
+    width: 280px;
+  }
+}

@@ -6,30 +6,45 @@
     <h1>Generar Venta</h1>
   </header>
 
-  <form [formGroup]="saleForm">
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Buscar Producto</mat-label>
-      <input type="text" matInput [formControl]="productControl" [matAutocomplete]="auto" />
-      <mat-autocomplete
-        #auto="matAutocomplete"
-        [displayWith]="displayFn"
-        (optionSelected)="onProductSelected($event)"
-      >
-        @for (product of filteredProducts | async; track product.id) {
-          <mat-option [value]="product">
-            <div class="option-container">
-              <span class="product-name">{{ product.name }}</span>
-              <span class="product-sku">({{ product.sku }})</span>
-              <span class="product-sku">(Disponible: {{ product.stock }})</span>
-              <span class="product-price">{{
-                product.price | currency: 'USD' : 'symbol' : '1.2-2'
-              }}</span>
-            </div>
-          </mat-option>
-        }
-      </mat-autocomplete>
+  <div class="sku-search-row">
+    <mat-form-field appearance="outline" class="sku-field">
+      <mat-label>Ingresar SKU</mat-label>
+      <mat-icon matPrefix>qr_code_scanner</mat-icon>
+      <input
+        matInput
+        [formControl]="skuControl"
+        placeholder="Ej. SKU-001"
+        (keydown)="onSkuSearch($event)"
+        autocomplete="off"
+      />
+      <mat-hint>Presiona Enter para agregar</mat-hint>
     </mat-form-field>
+  </div>
 
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Buscar Producto</mat-label>
+    <input type="text" matInput [formControl]="productControl" [matAutocomplete]="auto" />
+    <mat-autocomplete
+      #auto="matAutocomplete"
+      [displayWith]="displayFn"
+      (optionSelected)="onProductSelected($event)"
+    >
+      @for (product of filteredProducts | async; track product.id) {
+        <mat-option [value]="product">
+          <div class="option-container">
+            <span class="product-name">{{ product.name }}</span>
+            <span class="product-sku">({{ product.sku }})</span>
+            <span class="product-sku">(Disponible: {{ product.stock }})</span>
+            <span class="product-price">{{
+              product.price | currency: 'USD' : 'symbol' : '1.2-2'
+            }}</span>
+          </div>
+        </mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <form [formGroup]="saleForm">
     <div formArrayName="items" class="items-container">
       @for (item of items.controls; track $index; let i = $index) {
         <div [formGroupName]="i" class="item-row">
@@ -46,9 +61,8 @@
               min="1"
               [max]="item.get('stock')?.value"
             />
-            <!-- Mensaje de error cuando supera el stock -->
             @if (item.get('quantity')?.hasError('max')) {
-              <mat-error> Máximo {{ item.get('stock')?.value }} unidades disponibles </mat-error>
+              <mat-error>Máximo {{ item.get('stock')?.value }} unidades disponibles</mat-error>
             }
             @if (item.get('quantity')?.hasError('min')) {
               <mat-error>La cantidad mínima es 1</mat-error>
