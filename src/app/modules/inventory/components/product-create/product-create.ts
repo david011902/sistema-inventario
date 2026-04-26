@@ -46,7 +46,7 @@ export class ProductCreate {
       price: [0, [Validators.required, Validators.min(1)]],
       sku: ['', [Validators.required]],
       vehicleTypeId: [null, [Validators.required]],
-      socketTypeId: [null, [Validators.required]],
+      socketTypeId: [null],
     });
   }
   ngOnInit(): void {
