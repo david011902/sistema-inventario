@@ -85,6 +85,8 @@
               formControlName="quantity"
               min="1"
               [max]="item.get('stock')?.value"
+              (keydown)="$event.stopPropagation()"
+              (keyup)="$event.stopPropagation()"
             />
             @if (item.get('quantity')?.hasError('max')) {
               <mat-error>Máximo {{ item.get('stock')?.value }} unidades disponibles</mat-error>
