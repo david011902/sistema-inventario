@@ -19,13 +19,66 @@
   font-weight: 500;
   margin: 10px 0;
 }
-
-.table-card {
-  padding: 16px;
+.sales-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-.clickable-row {
+
+.sale-item {
   cursor: pointer;
+  padding: 12px 16px;
+  transition: box-shadow 0.2s ease;
+
   &:hover {
-    background-color: rgba(86, 153, 241, 0.04);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.sale-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sale-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sale-folio {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.sale-date {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.sale-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.sale-amount {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+mat-chip {
+  font-size: 11px;
+
+  &.status-completado {
+    background-color: #bbefbf;
+  }
+  &.status-reembolsototal {
+    background-color: #f7eccb;
+  }
+  &.status-pendiente {
+    background-color: #f8d2d8;
   }
 }

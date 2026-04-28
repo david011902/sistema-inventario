@@ -15,6 +15,9 @@
         [formControl]="skuControl"
         placeholder="Ej. SKU-001"
         (keydown)="onSkuSearch($event)"
+        (keyup)="onSkuSearch($event)"
+        inputmode="text"
+        enterkeyhint="search"
         autocomplete="off"
       />
       <mat-hint>Presiona Enter para agregar</mat-hint>

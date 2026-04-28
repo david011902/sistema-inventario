@@ -9,10 +9,19 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-inicio',
-  imports: [MatCardModule, MatTableModule, MatButtonModule, DatePipe, CurrencyPipe, RouterLink],
+  imports: [
+    MatCardModule,
+    MatTableModule,
+    MatButtonModule,
+    MatChipsModule,
+    DatePipe,
+    CurrencyPipe,
+    RouterLink,
+  ],
   templateUrl: './inicio.html',
   styleUrl: './inicio.scss',
 })

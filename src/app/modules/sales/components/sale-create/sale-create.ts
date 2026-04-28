@@ -65,32 +65,37 @@ export class SaleCreateComponent implements OnInit {
   ngOnInit(): void {
     this.loadProducts();
   }
+
   onSkuSearch(event: KeyboardEvent) {
-    if (event.key !== 'Enter') return;
+    const isEnter = event.key === 'Enter' || event.key === 'Go'; // algunos teclados Android
+    if (isEnter) {
+      event.preventDefault(); // evita que salte al siguiente campo
+      event.stopPropagation();
 
-    const sku = this.skuControl.value?.trim();
-    if (!sku) return;
+      const sku = this.skuControl.value?.trim();
+      if (!sku) return;
 
-    const localProduct = this.products.find((p) => p.sku.toLowerCase() === sku.toLowerCase());
+      const localProduct = this.products.find((p) => p.sku.toLowerCase() === sku.toLowerCase());
 
-    if (localProduct) {
-      this.addProduct(localProduct);
-      this.skuControl.setValue('', { emitEvent: false });
-      return;
-    }
-
-    this.productService.getProductBySku(sku).subscribe({
-      next: (product) => {
-        this.addProduct(product);
+      if (localProduct) {
+        this.addProduct(localProduct);
         this.skuControl.setValue('', { emitEvent: false });
-      },
-      error: () => {
-        this.dialogService.alert({
-          title: 'Producto no encontrado',
-          message: `No existe ningún producto con el SKU "${sku}".`,
-        });
-      },
-    });
+        return;
+      }
+
+      this.productService.getProductBySku(sku).subscribe({
+        next: (product) => {
+          this.addProduct(product);
+          this.skuControl.setValue('', { emitEvent: false });
+        },
+        error: () => {
+          this.dialogService.alert({
+            title: 'Producto no encontrado',
+            message: `No existe ningún producto con el SKU "${sku}".`,
+          });
+        },
+      });
+    }
   }
   //Getter del FormArray
   get items(): FormArray {
