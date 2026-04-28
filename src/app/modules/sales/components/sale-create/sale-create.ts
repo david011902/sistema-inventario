@@ -73,8 +73,28 @@ export class SaleCreateComponent implements OnInit {
 
   onBarcodeScanned(sku: string): void {
     this.scannerOpen = false;
-    this.skuControl.setValue(sku);
-    this.addProduct(sku);
+    this.skuControl.setValue('', { emitEvent: false }); // limpiar input
+
+    // 1. Buscar primero en los productos ya cargados
+    const localProduct = this.products.find((p) => p.sku.toLowerCase() === sku.toLowerCase());
+
+    if (localProduct) {
+      this.addProduct(localProduct);
+      return;
+    }
+
+    // 2. Si no está en local, buscar en la API
+    this.productService.getProductBySku(sku).subscribe({
+      next: (product) => {
+        this.addProduct(product);
+      },
+      error: () => {
+        this.dialogService.alert({
+          title: 'Producto no encontrado',
+          message: `No existe ningún producto con el SKU "${sku}".`,
+        });
+      },
+    });
   }
 
   onCamerasNotFound(): void {
