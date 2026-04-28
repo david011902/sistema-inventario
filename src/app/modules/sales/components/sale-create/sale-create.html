@@ -85,8 +85,8 @@
               formControlName="quantity"
               min="1"
               [max]="item.get('stock')?.value"
-              (keydown)="$event.stopPropagation()"
-              (keyup)="$event.stopPropagation()"
+              (keydown.enter)="$event.preventDefault(); $event.stopPropagation()"
+              (keydown.tab)="$event.preventDefault()"
             />
             @if (item.get('quantity')?.hasError('max')) {
               <mat-error>Máximo {{ item.get('stock')?.value }} unidades disponibles</mat-error>
@@ -99,7 +99,13 @@
           <div class="subtotal">
             {{ item.value.quantity * item.value.price | currency: 'MXN' : 'symbol' }}
           </div>
-          <button mat-icon-button color="warn" (click)="removeProduct(i)">
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="removeProduct(i)"
+            tabindex="-1"
+            type="button"
+          >
             <mat-icon>delete</mat-icon>
           </button>
         </div>
