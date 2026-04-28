@@ -22,7 +22,29 @@
       />
       <mat-hint>Presiona Enter para agregar</mat-hint>
     </mat-form-field>
+
+    <!-- Botón para abrir/cerrar cámara -->
+    <button mat-icon-button (click)="toggleScanner()" [color]="scannerOpen ? 'warn' : 'primary'">
+      <mat-icon>{{ scannerOpen ? 'close' : 'photo_camera' }}</mat-icon>
+    </button>
   </div>
+
+  <!-- Scanner,cuando está abierto -->
+  @if (scannerOpen) {
+    <div class="scanner-container">
+      <zxing-scanner
+        [enable]="scannerOpen"
+        [formats]="allowedFormats"
+        (scanSuccess)="onBarcodeScanned($event)"
+        (camerasNotFound)="onCamerasNotFound()"
+        (permissionResponse)="onPermissionResponse($event)"
+      />
+
+      @if (!hasPermission) {
+        <p class="scanner-error">Permite el acceso a la cámara para escanear</p>
+      }
+    </div>
+  }
 
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Buscar Producto</mat-label>

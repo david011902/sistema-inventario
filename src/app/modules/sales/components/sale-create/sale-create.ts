@@ -1,4 +1,3 @@
-import { SaleCreate } from './../../../../data/interfaces/sales/SaleCreate';
 import { Component, inject, OnInit } from '@angular/core';
 import { SaleService } from '../../../../core/services/sale-service';
 import {
@@ -25,7 +24,8 @@ import {
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
-
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { BarcodeFormat } from '@zxing/library';
 @Component({
   selector: 'app-sale-create',
   imports: [
@@ -39,6 +39,7 @@ import {
     MatOptionModule,
     MatAutocompleteModule,
     RouterLink,
+    ZXingScannerModule,
   ],
   templateUrl: './sale-create.html',
   styleUrl: './sale-create.scss',
@@ -55,7 +56,34 @@ export class SaleCreateComponent implements OnInit {
   filteredProducts!: Observable<ProductResponse[]>;
   skuControl = new FormControl('');
   productControl = new FormControl();
+  scannerOpen = false;
+  hasPermission = false;
+  allowedFormats = [
+    BarcodeFormat.QR_CODE,
+    BarcodeFormat.EAN_13,
+    BarcodeFormat.EAN_8,
+    BarcodeFormat.CODE_128,
+    BarcodeFormat.CODE_39,
+    BarcodeFormat.UPC_A,
+    BarcodeFormat.UPC_E,
+  ];
+  toggleScanner(): void {
+    this.scannerOpen = !this.scannerOpen;
+  }
 
+  onBarcodeScanned(sku: string): void {
+    this.scannerOpen = false;
+    this.skuControl.setValue(sku);
+    this.addProduct(sku);
+  }
+
+  onCamerasNotFound(): void {
+    console.warn('No se encontró cámara');
+  }
+
+  onPermissionResponse(granted: boolean): void {
+    this.hasPermission = granted;
+  }
   //Inicializar el Form en el constructor
   constructor() {
     this.saleForm = this.fb.group({
@@ -67,7 +95,7 @@ export class SaleCreateComponent implements OnInit {
   }
 
   onSkuSearch(event: KeyboardEvent) {
-    const isEnter = event.key === 'Enter' || event.key === 'Go'; // algunos teclados Android
+    const isEnter = event.key === 'Enter' || event.key === 'Go';
     if (isEnter) {
       event.preventDefault(); // evita que salte al siguiente campo
       event.stopPropagation();
