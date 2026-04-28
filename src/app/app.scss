@@ -1,0 +1,7 @@
+.main-content {
+  /* contenido nunca quede debajo del Nav */
+  padding-bottom: calc(65px + 24px);
+
+  /* iPhone/iOS: */
+  padding-bottom: calc(65px + 24px + env(safe-area-inset-bottom));
+}
