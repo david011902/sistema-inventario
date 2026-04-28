@@ -1,4 +1,4 @@
-<div class="main-content">
+<div class="main-content" [class.with-nav]="authService.isLoggedIn()">
   <router-outlet></router-outlet>
 </div>
 @if (authService.isLoggedIn()) {

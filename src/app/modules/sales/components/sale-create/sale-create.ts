@@ -58,6 +58,8 @@ export class SaleCreateComponent implements OnInit {
   productControl = new FormControl();
   scannerOpen = false;
   hasPermission = false;
+
+  // Formatos aceptados actualmente uso el code_128
   allowedFormats = [
     BarcodeFormat.QR_CODE,
     BarcodeFormat.EAN_13,
@@ -72,10 +74,10 @@ export class SaleCreateComponent implements OnInit {
   }
 
   onBarcodeScanned(sku: string): void {
-    this.scannerOpen = false;
+    this.scannerOpen = false; //Hace que se cierre la camara
     this.skuControl.setValue('', { emitEvent: false }); // limpiar input
 
-    // 1. Buscar primero en los productos ya cargados
+    //Busca en los productos ya cargados
     const localProduct = this.products.find((p) => p.sku.toLowerCase() === sku.toLowerCase());
 
     if (localProduct) {
@@ -83,7 +85,7 @@ export class SaleCreateComponent implements OnInit {
       return;
     }
 
-    // 2. Si no está en local, buscar en la API
+    // En caso de que no este, llama a buscar en la API
     this.productService.getProductBySku(sku).subscribe({
       next: (product) => {
         this.addProduct(product);
