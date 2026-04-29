@@ -16,9 +16,15 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const authReq = req.clone({ withCredentials: true });
 
+  const isAuthEndpoint =
+    req.url.includes('/auth/refresh') ||
+    req.url.includes('/auth/me') ||
+    req.url.includes('/auth/logout') ||
+    req.url.includes('/auth/login');
+
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401 && !req.url.includes('/auth/refresh')) {
+      if (error.status === 401 && !isAuthEndpoint) {
         return handle401(req, next, authService);
       }
       return throwError(() => error);

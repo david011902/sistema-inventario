@@ -37,12 +37,13 @@ export class AuthService {
   }
 
   logout(): void {
-    this.http.post<void>(`${this.baseUrl}/logout`, {}, { withCredentials: true }).subscribe({
-      complete: () => {
-        this._currentUser.set(null);
-        this.router.navigate(['/login']);
-      },
-    });
+    this._currentUser.set(null); // primero limpiar el estado
+    this.http
+      .post<void>(`${this.baseUrl}/logout`, {}, { withCredentials: true })
+      .pipe(catchError(() => EMPTY))
+      .subscribe({
+        complete: () => this.router.navigate(['/login']),
+      });
   }
 
   refreshToken() {
@@ -55,12 +56,8 @@ export class AuthService {
 
   // para recuperar sesión al iniciar la app
   validateSession() {
-    return this.http.get<AuthUser>(`${this.baseUrl}/me`, { withCredentials: true }).pipe(
-      tap((user) => this._currentUser.set(user)),
-      catchError(() => {
-        this._currentUser.set(null);
-        return EMPTY;
-      }),
-    );
+    return this.http
+      .get<AuthUser>(`${this.baseUrl}/me`, { withCredentials: true })
+      .pipe(tap((user) => this._currentUser.set(user)));
   }
 }
