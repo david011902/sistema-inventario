@@ -24,7 +24,10 @@ export interface RegisterResponse {
   email: string;
   role: string;
 }
-
+export interface LoginResponse {
+  message: string;
+  user: AuthUser;
+}
 export interface AuthUser {
   sub: string;
   email: string;

@@ -4,6 +4,7 @@ import { environment } from '../../../../environments/environment';
 import {
   AuthUser,
   LoginRequest,
+  LoginResponse,
   RegisterRequest,
   RegisterResponse,
 } from '../interfaces/AuthInterfaces';
@@ -27,7 +28,9 @@ export class AuthService {
 
   // las cookies son automáticas
   login(request: LoginRequest) {
-    return this.http.post<void>(`${this.baseUrl}/login`, request, { withCredentials: true });
+    return this.http
+      .post<LoginResponse>(`${this.baseUrl}/login`, request, { withCredentials: true })
+      .pipe(tap((response) => this._currentUser.set(response.user)));
   }
 
   register(request: RegisterRequest) {
