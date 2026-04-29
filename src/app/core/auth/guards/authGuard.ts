@@ -1,16 +1,20 @@
 import { AuthService } from './../services/auth';
 import { inject } from '@angular/core';
-import { CanActivateFn } from '@angular/router';
-import { Router } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
+import { map, catchError, of } from 'rxjs';
 
 export const authGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
+  // Si ya hay usuario en memoria, pasar directo
   if (authService.isLoggedIn()) {
     return true;
   }
 
-  // No autenticado: redirigir al login
-  return router.createUrlTree(['/login']);
+  // Si no, intenta recuperar sesión antes de decidir
+  return authService.validateSession().pipe(
+    map(() => true),
+    catchError(() => of(router.createUrlTree(['/login']))),
+  );
 };

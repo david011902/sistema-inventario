@@ -11,7 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/services/auth';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-
+import { switchMap } from 'rxjs';
 @Component({
   selector: 'app-login',
   imports: [
@@ -48,18 +48,22 @@ export class LoginComponent {
     }
     this.loading.set(true);
     this.errorMessage.set(null);
-    this.authService.login(this.loginForm.value).subscribe({
-      next: (response) => {
-        // console.log('Login successful:', response);
-        this.router.navigate(['/dashboard']);
-      },
-      error: (error) => {
-        this.loading.set(false);
-        console.error('Login failed:', error);
-        const message = error.error || 'Ocurrio un error al hacer login';
-        this.errorMessage.set(message);
-      },
-    });
+
+    this.authService
+      .login(this.loginForm.value)
+      .pipe(switchMap(() => this.authService.validateSession()))
+      .subscribe({
+        next: () => {
+          this.loading.set(false);
+          this.router.navigate(['/dashboard']);
+        },
+        error: (error) => {
+          this.loading.set(false);
+          console.error('Login failed:', error);
+          const message = error.error || 'Ocurrió un error al hacer login';
+          this.errorMessage.set(message);
+        },
+      });
   }
   togglePasswordVisibility() {
     this.hide = !this.hide;

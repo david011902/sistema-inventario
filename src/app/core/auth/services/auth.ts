@@ -27,11 +27,7 @@ export class AuthService {
 
   // las cookies son automáticas
   login(request: LoginRequest) {
-    return this.http
-      .post<void>(`${this.baseUrl}/login`, request, {
-        withCredentials: true, //permite recibir cookies
-      })
-      .pipe(tap(() => this.validateSession().subscribe()));
+    return this.http.post<void>(`${this.baseUrl}/login`, request, { withCredentials: true });
   }
 
   register(request: RegisterRequest) {
