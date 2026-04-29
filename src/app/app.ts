@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavBottom } from './shared/components/nav-bottom/nav-bottom';
 import { AuthService } from './core/auth/services/auth';
@@ -9,7 +9,10 @@ import { AuthService } from './core/auth/services/auth';
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {
+export class App implements OnInit {
   protected readonly title = signal('sistema-inventario');
   protected authService = inject(AuthService);
+  ngOnInit(): void {
+    this.authService.validateSession().subscribe();
+  }
 }

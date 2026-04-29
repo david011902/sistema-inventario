@@ -5,35 +5,24 @@ import { AuthService } from '../services/auth';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  const token = authService.getAccessToken();
 
-  // Clonar el request y agregar el Bearer token si existe
-  const authReq = token ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
+  // El navegador envia las cookies en automatico
+  const authReq = req.clone({ withCredentials: true });
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      // Si el servidor responde 401 (token expirado), intentar refresh
-      if (error.status === 401) {
-        const refresh$ = authService.refreshToken();
-        if (refresh$) {
-          return refresh$.pipe(
-            switchMap(() => {
-              // Reintentar el request original con el nuevo token
-              const newToken = authService.getAccessToken();
-              const retryReq = req.clone({
-                setHeaders: { Authorization: `Bearer ${newToken}` },
-              });
-              return next(retryReq);
-            }),
-            catchError(() => {
-              // Si el refresh tambien falla, cerrar sesion
-              authService.logout();
-              return throwError(() => error);
-            }),
-          );
-        }
-        authService.logout();
+      const isRefreshUrl = req.url.includes('/auth/refresh');
+
+      if (error.status === 401 && !isRefreshUrl) {
+        return authService.refreshToken().pipe(
+          switchMap(() => next(authReq)), // reintenta con las nuevas cookies
+          catchError(() => {
+            authService.logout();
+            return throwError(() => error);
+          }),
+        );
       }
+
       return throwError(() => error);
     }),
   );
