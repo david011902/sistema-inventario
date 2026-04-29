@@ -6,19 +6,19 @@ import { AuthService } from '../services/auth';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
 
-  // El navegador envia las cookies en automatico
+  // Aseguramos que TODAS las peticiones lleven credenciales (cookies)
   const authReq = req.clone({ withCredentials: true });
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      const isRefreshUrl = req.url.includes('/auth/refresh');
-
-      if (error.status === 401 && !isRefreshUrl) {
+      if (error.status === 401 && !req.url.includes('/auth/refresh')) {
         return authService.refreshToken().pipe(
-          switchMap(() => next(authReq)), // reintenta con las nuevas cookies
-          catchError(() => {
+          switchMap(() => {
+            return next(req.clone({ withCredentials: true }));
+          }),
+          catchError((refreshError) => {
             authService.logout();
-            return throwError(() => error);
+            return throwError(() => refreshError);
           }),
         );
       }
