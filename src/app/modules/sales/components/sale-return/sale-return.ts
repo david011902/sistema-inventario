@@ -23,6 +23,7 @@ import { SaleUpdate } from '../../../../data/interfaces/sales/SaleUpdate';
     MatIconModule,
     MatSelectModule,
     MatOptionModule,
+    RouterLink,
   ],
   templateUrl: './sale-return.html',
   styleUrl: './sale-return.scss',

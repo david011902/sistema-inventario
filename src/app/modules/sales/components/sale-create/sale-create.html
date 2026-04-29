@@ -5,126 +5,128 @@
     </button>
     <h1>Generar Venta</h1>
   </header>
+  <!-- Create sale -->
+  <div class="card">
+    <div class="sku-search-row">
+      <mat-form-field appearance="outline" class="sku-field">
+        <mat-label>Ingresar SKU</mat-label>
+        <mat-icon matPrefix>qr_code_scanner</mat-icon>
+        <input
+          matInput
+          [formControl]="skuControl"
+          placeholder="Ej. SKU-001"
+          (keydown)="onSkuSearch($event)"
+          (keyup)="onSkuSearch($event)"
+          inputmode="text"
+          enterkeyhint="search"
+          autocomplete="off"
+        />
+        <mat-hint>Presiona Enter para agregar</mat-hint>
+      </mat-form-field>
 
-  <div class="sku-search-row">
-    <mat-form-field appearance="outline" class="sku-field">
-      <mat-label>Ingresar SKU</mat-label>
-      <mat-icon matPrefix>qr_code_scanner</mat-icon>
-      <input
-        matInput
-        [formControl]="skuControl"
-        placeholder="Ej. SKU-001"
-        (keydown)="onSkuSearch($event)"
-        (keyup)="onSkuSearch($event)"
-        inputmode="text"
-        enterkeyhint="search"
-        autocomplete="off"
-      />
-      <mat-hint>Presiona Enter para agregar</mat-hint>
+      <!-- Botón para abrir/cerrar cámara -->
+      <button mat-icon-button (click)="toggleScanner()" [color]="scannerOpen ? 'warn' : 'primary'">
+        <mat-icon>{{ scannerOpen ? 'close' : 'photo_camera' }}</mat-icon>
+      </button>
+    </div>
+
+    <!-- Scanner,cuando está abierto -->
+    @if (scannerOpen) {
+      <div class="scanner-container">
+        <zxing-scanner
+          [enable]="scannerOpen"
+          [formats]="allowedFormats"
+          (scanSuccess)="onBarcodeScanned($event)"
+          (camerasNotFound)="onCamerasNotFound()"
+          (permissionResponse)="onPermissionResponse($event)"
+        />
+
+        @if (!hasPermission) {
+          <p class="scanner-error">Permite el acceso a la cámara para escanear</p>
+        }
+      </div>
+    }
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Buscar Producto</mat-label>
+      <input type="text" matInput [formControl]="productControl" [matAutocomplete]="auto" />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        [displayWith]="displayFn"
+        (optionSelected)="onProductSelected($event)"
+      >
+        @for (product of filteredProducts | async; track product.id) {
+          <mat-option [value]="product">
+            <div class="option-container">
+              <span class="product-name">{{ product.name }}</span>
+              <span class="product-sku">({{ product.sku }})</span>
+              <span class="product-sku">(Disponible: {{ product.stock }})</span>
+              <span class="product-price">{{
+                product.price | currency: 'USD' : 'symbol' : '1.2-2'
+              }}</span>
+            </div>
+          </mat-option>
+        }
+      </mat-autocomplete>
     </mat-form-field>
 
-    <!-- Botón para abrir/cerrar cámara -->
-    <button mat-icon-button (click)="toggleScanner()" [color]="scannerOpen ? 'warn' : 'primary'">
-      <mat-icon>{{ scannerOpen ? 'close' : 'photo_camera' }}</mat-icon>
-    </button>
-  </div>
+    <form [formGroup]="saleForm">
+      <div formArrayName="items" class="items-container">
+        @for (item of items.controls; track $index; let i = $index) {
+          <div [formGroupName]="i" class="item-row">
+            <div class="item-info">
+              <strong>{{ item.value.productName }}</strong>
+              <small>({{ item.value.sku }})</small>
+            </div>
+            <mat-form-field appearance="outline" class="qty-field">
+              <mat-label>Cantidad</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="quantity"
+                min="1"
+                [max]="item.get('stock')?.value"
+                (keydown.enter)="$event.preventDefault(); $event.stopPropagation()"
+                (keydown.tab)="$event.preventDefault()"
+              />
+              @if (item.get('quantity')?.hasError('max')) {
+                <mat-error>Máximo {{ item.get('stock')?.value }} unidades disponibles</mat-error>
+              }
+              @if (item.get('quantity')?.hasError('min')) {
+                <mat-error>La cantidad mínima es 1</mat-error>
+              }
+            </mat-form-field>
+            <div class="price">{{ item.value.price | currency: 'MXN' : 'symbol' }}</div>
+            <div class="subtotal">
+              {{ item.value.quantity * item.value.price | currency: 'MXN' : 'symbol' }}
+            </div>
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="removeProduct(i)"
+              tabindex="-1"
+              type="button"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+    </form>
 
-  <!-- Scanner,cuando está abierto -->
-  @if (scannerOpen) {
-    <div class="scanner-container">
-      <zxing-scanner
-        [enable]="scannerOpen"
-        [formats]="allowedFormats"
-        (scanSuccess)="onBarcodeScanned($event)"
-        (camerasNotFound)="onCamerasNotFound()"
-        (permissionResponse)="onPermissionResponse($event)"
-      />
-
-      @if (!hasPermission) {
-        <p class="scanner-error">Permite el acceso a la cámara para escanear</p>
-      }
+    <div class="total-container">
+      <h2>Total: {{ getTotal() | currency: 'MXN' }}</h2>
     </div>
-  }
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Buscar Producto</mat-label>
-    <input type="text" matInput [formControl]="productControl" [matAutocomplete]="auto" />
-    <mat-autocomplete
-      #auto="matAutocomplete"
-      [displayWith]="displayFn"
-      (optionSelected)="onProductSelected($event)"
-    >
-      @for (product of filteredProducts | async; track product.id) {
-        <mat-option [value]="product">
-          <div class="option-container">
-            <span class="product-name">{{ product.name }}</span>
-            <span class="product-sku">({{ product.sku }})</span>
-            <span class="product-sku">(Disponible: {{ product.stock }})</span>
-            <span class="product-price">{{
-              product.price | currency: 'USD' : 'symbol' : '1.2-2'
-            }}</span>
-          </div>
-        </mat-option>
-      }
-    </mat-autocomplete>
-  </mat-form-field>
-
-  <form [formGroup]="saleForm">
-    <div formArrayName="items" class="items-container">
-      @for (item of items.controls; track $index; let i = $index) {
-        <div [formGroupName]="i" class="item-row">
-          <div class="item-info">
-            <strong>{{ item.value.productName }}</strong>
-            <small>({{ item.value.sku }})</small>
-          </div>
-          <mat-form-field appearance="outline" class="qty-field">
-            <mat-label>Cantidad</mat-label>
-            <input
-              matInput
-              type="number"
-              formControlName="quantity"
-              min="1"
-              [max]="item.get('stock')?.value"
-              (keydown.enter)="$event.preventDefault(); $event.stopPropagation()"
-              (keydown.tab)="$event.preventDefault()"
-            />
-            @if (item.get('quantity')?.hasError('max')) {
-              <mat-error>Máximo {{ item.get('stock')?.value }} unidades disponibles</mat-error>
-            }
-            @if (item.get('quantity')?.hasError('min')) {
-              <mat-error>La cantidad mínima es 1</mat-error>
-            }
-          </mat-form-field>
-          <div class="price">{{ item.value.price | currency: 'MXN' : 'symbol' }}</div>
-          <div class="subtotal">
-            {{ item.value.quantity * item.value.price | currency: 'MXN' : 'symbol' }}
-          </div>
-          <button
-            mat-icon-button
-            color="warn"
-            (click)="removeProduct(i)"
-            tabindex="-1"
-            type="button"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
-      }
+    <div class="actions">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onSubmit()"
+        [disabled]="items.length === 0 || saleForm.invalid"
+      >
+        Registrar Venta
+      </button>
     </div>
-  </form>
-
-  <div class="total-container">
-    <h2>Total: {{ getTotal() | currency: 'MXN' }}</h2>
-  </div>
-
-  <div class="actions">
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="onSubmit()"
-      [disabled]="items.length === 0 || saleForm.invalid"
-    >
-      Registrar Venta
-    </button>
   </div>
 </div>

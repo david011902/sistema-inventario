@@ -1,8 +1,10 @@
-.info-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+.return-container {
+  max-width: 768px;
+  margin: 0 auto;
+  padding: 16px;
+}
+p {
+  text-align: center;
 }
 .form-container {
   display: flex;
@@ -15,4 +17,37 @@
 mat-form-field {
   width: 90%;
   max-width: 700px;
+}
+.details-header,
+.detail-item {
+  display: grid;
+  grid-template-columns: 2fr 0.5fr 1fr 1fr; // Distribución de columnas
+  gap: 10px;
+  align-items: center;
+  padding: 12px 0;
+}
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto 16px;
+}
+.detail-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+
+  h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  button {
+    color: #2c3e50;
+  }
 }

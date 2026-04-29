@@ -1,36 +1,42 @@
-<div class="info-container">
-  <h1>Devolución Venta</h1>
+<div class="return-container">
+  <header class="detail-header">
+    <button mat-icon-button routerLink="/sales">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Detalles de la venta</h1>
+  </header>
   <p><b>Folio: </b> {{ saleFolio }}</p>
+  <div class="card">
+    <form [formGroup]="saleForm" (ngSubmit)="onSubmit()" class="form-container">
+      <mat-form-field appearance="outline" class="form-control">
+        <mat-label>Producto a devolver</mat-label>
+        <mat-select formControlName="productSku">
+          <mat-option value="">Selecciona un producto</mat-option>
+          @for (item of saleResponse?.details; track item.productSku) {
+            <mat-option [value]="item.productSku">
+              {{ item.productName }} ({{ item.productSku }}) - Disp: {{ item.quantity }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-control">
+        <mat-label>Cantidad a devolver</mat-label>
+        <input matInput type="number" formControlName="quantityToReturn" />
+
+        @if (saleForm.get('quantityToReturn')?.hasError('max')) {
+          <mat-error>La cantidad no puede ser mayor a la vendida</mat-error>
+        }
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="saleForm.invalid || isLodading"
+      >
+        {{ isLodading ? 'Procesando...' : 'Confirmar Devolución' }}
+      </button>
+    </form>
+  </div>
 </div>
-
-<form [formGroup]="saleForm" (ngSubmit)="onSubmit()" class="form-container">
-  <mat-form-field appearance="outline" class="form-control">
-    <mat-label>Producto a devolver</mat-label>
-    <mat-select formControlName="productSku">
-      <mat-option value="">Selecciona un producto</mat-option>
-      @for (item of saleResponse?.details; track item.productSku) {
-        <mat-option [value]="item.productSku">
-          {{ item.productName }} ({{ item.productSku }}) - Disp: {{ item.quantity }}
-        </mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
-
-  <mat-form-field appearance="outline" class="form-control">
-    <mat-label>Cantidad a devolver</mat-label>
-    <input matInput type="number" formControlName="quantityToReturn" />
-
-    @if (saleForm.get('quantityToReturn')?.hasError('max')) {
-      <mat-error>La cantidad no puede ser mayor a la vendida</mat-error>
-    }
-  </mat-form-field>
-
-  <button
-    mat-raised-button
-    color="primary"
-    type="submit"
-    [disabled]="saleForm.invalid || isLodading"
-  >
-    {{ isLodading ? 'Procesando...' : 'Confirmar Devolución' }}
-  </button>
-</form>
