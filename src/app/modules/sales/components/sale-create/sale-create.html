@@ -56,14 +56,20 @@
         (optionSelected)="onProductSelected($event)"
       >
         @for (product of filteredProducts | async; track product.id) {
-          <mat-option [value]="product">
+          <mat-option [value]="product" class="product-option">
             <div class="option-container">
               <span class="product-name">{{ product.name }}</span>
-              <span class="product-sku">({{ product.sku }})</span>
-              <span class="product-sku">(Disponible: {{ product.stock }})</span>
-              <span class="product-price">{{
-                product.price | currency: 'USD' : 'symbol' : '1.2-2'
-              }}</span>
+
+              <div class="product-metadata">
+                <span class="badge sku-badge">{{ product.sku }}</span>
+                <span class="badge stock-badge" [class.low-stock]="product.stock < 5">
+                  Stock: {{ product.stock }}
+                </span>
+              </div>
+
+              <span class="product-price">
+                {{ product.price | currency: 'USD' : 'symbol' : '1.2-2' }}
+              </span>
             </div>
           </mat-option>
         }
