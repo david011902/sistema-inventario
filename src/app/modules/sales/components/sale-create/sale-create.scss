@@ -27,48 +27,11 @@
 }
 .option-container {
   display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 2px 0;
-}
-
-.option-main {
-  display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
 }
 
-.option-meta {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.product-name {
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 60%;
-}
-
-.product-sku {
-  color: #757575;
-  font-size: 0.8rem;
-}
-
-.product-stock {
-  color: #757575;
-  font-size: 0.8rem;
-}
-
-.product-price {
-  font-weight: 700;
-  color: #2e7d32;
-  white-space: nowrap;
-  margin-left: 8px;
-}
 .product-name {
   font-weight: 500;
   margin-right: 8px;
