@@ -8,7 +8,7 @@ import {
   RegisterRequest,
   RegisterResponse,
 } from '../interfaces/AuthInterfaces';
-import { tap, catchError, EMPTY } from 'rxjs';
+import { tap, catchError, EMPTY, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -25,7 +25,8 @@ export class AuthService {
   readonly isLoggedIn = computed(() => this._currentUser() !== null);
   readonly isAdmin = computed(() => this._currentUser()?.role === 'Administrator');
   readonly isEmployee = computed(() => this._currentUser()?.role === 'Employee');
-
+  private _isInitializing = signal<boolean>(true);
+  readonly isInitializing = this._isInitializing.asReadonly();
   // las cookies son automáticas
   login(request: LoginRequest) {
     return this.http
@@ -59,8 +60,16 @@ export class AuthService {
 
   // para recuperar sesión al iniciar la app
   validateSession() {
-    return this.http
-      .get<AuthUser>(`${this.baseUrl}/me`, { withCredentials: true })
-      .pipe(tap((user) => this._currentUser.set(user)));
+    this._isInitializing.set(true);
+    return this.http.get<AuthUser>(`${this.baseUrl}/me`, { withCredentials: true }).pipe(
+      tap((user) => {
+        this._currentUser.set(user);
+        this._isInitializing.set(false);
+      }),
+      catchError((err) => {
+        this._isInitializing.set(false);
+        return throwError(() => err);
+      }),
+    );
   }
 }

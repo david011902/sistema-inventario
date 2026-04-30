@@ -9,10 +9,7 @@ import { AuthService } from './core/auth/services/auth';
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App implements OnInit {
+export class App {
   protected readonly title = signal('sistema-inventario');
   protected authService = inject(AuthService);
-  ngOnInit(): void {
-    this.authService.validateSession().subscribe();
-  }
 }
