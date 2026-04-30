@@ -9,29 +9,20 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface RefreshRequest {
-  refreshToken: string;
-}
-
-export interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-}
-
 export interface RegisterResponse {
   id: string;
   name: string;
   email: string;
   role: string;
 }
+
 export interface LoginResponse {
   message: string;
   user: AuthUser;
 }
+
 export interface AuthUser {
-  sub: string;
+  id: string;
   email: string;
   role: string;
-  iat: number;
-  exp: number;
 }
