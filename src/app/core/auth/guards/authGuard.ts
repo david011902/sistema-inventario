@@ -1,7 +1,7 @@
 import { AuthService } from './../services/auth';
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { map, catchError, of } from 'rxjs';
+import { map, catchError, of, switchMap } from 'rxjs';
 
 export const authGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
@@ -13,6 +13,13 @@ export const authGuard: CanActivateFn = () => {
 
   return authService.validateSession().pipe(
     map(() => true),
-    catchError(() => of(router.createUrlTree(['/login']))),
+    catchError(() => {
+      // access token expirado → intentar refresh antes de rendirse
+      return authService.refreshToken().pipe(
+        switchMap(() => authService.validateSession()),
+        map(() => true),
+        catchError(() => of(router.createUrlTree(['/login']))),
+      );
+    }),
   );
 };
