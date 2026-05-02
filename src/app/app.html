@@ -1,6 +1,13 @@
-<div class="main-content">
-  <router-outlet></router-outlet>
-</div>
-@if (authService.isLoggedIn()) {
-  <app-nav-bottom></app-nav-bottom>
+@if (authService.isInitializing()) {
+  <div class="loading">
+    <mat-spinner diameter="50" color="primary"></mat-spinner>
+    <p>Iniciando...</p>
+  </div>
+} @else {
+  <div class="main-content">
+    <router-outlet></router-outlet>
+  </div>
+  @if (authService.isLoggedIn()) {
+    <app-nav-bottom></app-nav-bottom>
+  }
 }
