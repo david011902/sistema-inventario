@@ -37,14 +37,13 @@ export const routes: Routes = [
       import('./modules/inventory/components/stock-create/stock-create').then((m) => m.StockCreate),
     canActivate: [authGuard],
   },
-  { path: 'stock/:id', component: StockDetail, canActivate: [authGuard] },
-
   {
     path: 'stock/editar/:id',
     loadComponent: () =>
       import('./modules/inventory/components/stock-edit/stock-edit').then((m) => m.StockEdit),
     canActivate: [authGuard],
   },
+  { path: 'stock/:id', component: StockDetail, canActivate: [authGuard] },
   {
     path: 'sales',
     // Carga perezosa (Lazy Loading) - solo carga el código cuando el usuario entra
@@ -61,17 +60,17 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'sales/editar/:folio',
+    loadComponent: () =>
+      import('./modules/sales/components/sale-return/sale-return').then((m) => m.SaleReturn),
+    canActivate: [authGuard],
+  },
+  {
     path: 'sales/:folio',
     loadComponent: () =>
       import('./modules/sales/components/sale-detail/sale-detail').then(
         (m) => m.SaleDetailComponent,
       ),
-    canActivate: [authGuard],
-  },
-  {
-    path: 'sales/editar/:folio',
-    loadComponent: () =>
-      import('./modules/sales/components/sale-return/sale-return').then((m) => m.SaleReturn),
     canActivate: [authGuard],
   },
 ];
