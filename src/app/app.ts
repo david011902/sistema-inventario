@@ -11,6 +11,8 @@ import { EMPTY, catchError } from 'rxjs';
   styleUrl: './app.scss',
 })
 export class App implements OnInit {
+  protected readonly title = signal('sistema-inventario');
+  protected authService = inject(AuthService);
   ngOnInit(): void {
     this.authService
       .validateSession()
@@ -19,6 +21,4 @@ export class App implements OnInit {
       )
       .subscribe();
   }
-  protected readonly title = signal('sistema-inventario');
-  protected authService = inject(AuthService);
 }

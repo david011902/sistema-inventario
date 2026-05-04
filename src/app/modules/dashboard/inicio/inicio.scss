@@ -1,10 +1,10 @@
 .dashboard-container {
-  padding: 24px;
   display: flex;
   flex-direction: column;
-  align-content: center;
+  align-items: center;
   gap: 24px;
   max-width: 768px;
+  padding: 24px;
   margin: 0 auto;
 }
 
@@ -26,10 +26,9 @@
 }
 
 .sale-item {
-  cursor: pointer;
   padding: 12px 16px;
+  cursor: pointer;
   transition: box-shadow 0.2s ease;
-
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
@@ -48,8 +47,8 @@
 }
 
 .sale-folio {
-  font-weight: 600;
   font-size: 14px;
+  font-weight: 600;
 }
 
 .sale-date {
@@ -65,8 +64,8 @@
 }
 
 .sale-amount {
-  font-weight: 700;
   font-size: 15px;
+  font-weight: 700;
 }
 
 mat-chip {

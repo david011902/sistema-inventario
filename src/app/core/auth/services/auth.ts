@@ -61,29 +61,23 @@ export class AuthService {
 
   // para recuperar sesión al iniciar la app
   validateSession(): Observable<AuthUser> {
-    // Si ya hay una validación en curso, devolvemos la misma para no duplicar llamadas a la API
     if (this.sessionCheck$) {
       return this.sessionCheck$;
     }
 
-    this._isInitializing.set(true);
-
     this.sessionCheck$ = this.http
       .get<AuthUser>(`${this.baseUrl}/me`, { withCredentials: true })
       .pipe(
-        tap((user) => {
-          this._currentUser.set(user);
-          this._isInitializing.set(false);
-        }),
+        tap((user) => this._currentUser.set(user)),
         catchError((err) => {
-          this._currentUser.set(null); // Asegura limpiar el estado
-          this._isInitializing.set(false); // Apaga el spinner incluso si falla
+          this._currentUser.set(null);
           return throwError(() => err);
         }),
         finalize(() => {
-          this.sessionCheck$ = undefined; // Limpia la caché al terminar
+          this._isInitializing.set(false); // un solo lugar, siempre se ejecuta
+          this.sessionCheck$ = undefined;
         }),
-        share(), // Comparte la ejecución entre múltiples suscriptores
+        share(), //debe ser el último operador
       );
 
     return this.sessionCheck$;
