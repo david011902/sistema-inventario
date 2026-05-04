@@ -8,7 +8,7 @@ import {
   RegisterRequest,
   RegisterResponse,
 } from '../interfaces/AuthInterfaces';
-import { tap, catchError, EMPTY, throwError } from 'rxjs';
+import { tap, catchError, EMPTY, throwError, share, finalize, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -27,6 +27,7 @@ export class AuthService {
   readonly isEmployee = computed(() => this._currentUser()?.role === 'Employee');
   private _isInitializing = signal<boolean>(true);
   readonly isInitializing = this._isInitializing.asReadonly();
+  private sessionCheck$?: Observable<AuthUser>;
   // las cookies son automáticas
   login(request: LoginRequest) {
     return this.http
@@ -59,17 +60,32 @@ export class AuthService {
   }
 
   // para recuperar sesión al iniciar la app
-  validateSession() {
+  validateSession(): Observable<AuthUser> {
+    // Si ya hay una validación en curso, devolvemos la misma para no duplicar llamadas a la API
+    if (this.sessionCheck$) {
+      return this.sessionCheck$;
+    }
+
     this._isInitializing.set(true);
-    return this.http.get<AuthUser>(`${this.baseUrl}/me`, { withCredentials: true }).pipe(
-      tap((user) => {
-        this._currentUser.set(user);
-        this._isInitializing.set(false);
-      }),
-      catchError((err) => {
-        this._isInitializing.set(false);
-        return throwError(() => err);
-      }),
-    );
+
+    this.sessionCheck$ = this.http
+      .get<AuthUser>(`${this.baseUrl}/me`, { withCredentials: true })
+      .pipe(
+        tap((user) => {
+          this._currentUser.set(user);
+          this._isInitializing.set(false);
+        }),
+        catchError((err) => {
+          this._currentUser.set(null); // Asegura limpiar el estado
+          this._isInitializing.set(false); // Apaga el spinner incluso si falla
+          return throwError(() => err);
+        }),
+        finalize(() => {
+          this.sessionCheck$ = undefined; // Limpia la caché al terminar
+        }),
+        share(), // Comparte la ejecución entre múltiples suscriptores
+      );
+
+    return this.sessionCheck$;
   }
 }
