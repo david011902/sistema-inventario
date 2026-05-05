@@ -42,12 +42,14 @@ export class AuthService {
   }
 
   logout(): void {
-    this._currentUser.set(null); // primero limpiar el estado
     this.http
       .post<void>(`${this.baseUrl}/logout`, {}, { withCredentials: true })
       .pipe(catchError(() => EMPTY))
       .subscribe({
-        complete: () => this.router.navigate(['/login']),
+        complete: () => {
+          this._currentUser.set(null); // limpiar después de que el servidor confirmó
+          this.router.navigate(['/login']);
+        },
       });
   }
 
